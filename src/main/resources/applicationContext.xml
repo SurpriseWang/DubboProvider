@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-4.0.xsd
+http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+http://dubbo.apache.org/schema/dubbo        
+http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
+	<!-- 加载数据源的属性文件 -->
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:db.properties" />
+	</bean>
+
+	<!-- 配置数据源 -->
+	<bean id="dataSource"
+		class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="initialSize" value="${jdbc.initialSize}" />
+		<property name="maxActive" value="${jdbc.maxActive}" />
+		<property name="maxIdle" value="${jdbc.maxIdle}" />
+		<property name="minIdle" value="${jdbc.minIdle}" />
+		<property name="maxWait" value="${jdbc.maxWait}" />
+	</bean>
+
+	<!-- 配置session工厂 -->
+	<bean id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- 扫描所有Mapper接口 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"><!-- Mapper包扫描 -->
+		<property name="basePackage" value="com.wang.mappers" />
+	</bean>
+	<context:component-scan
+		base-package="com.wang.service" />
+	<!-- 提供方应用信息，用于计算依赖关系 -->
+	<dubbo:application name="demo-provider" />
+	<!-- 使用zk注册中心暴露服务地址 -->
+	<dubbo:registry address="zookeeper://127.0.0.1:2181" />
+	<!-- 用dubbo协议在20880端口暴露服务 -->
+	<dubbo:protocol name="dubbo" port="20890" />
+	<!-- 声明需要暴露的服务接口 -->
+	<dubbo:service interface="com.wang.service.AdminService"
+		ref="AdminService" />
+	<dubbo:service interface="com.wang.service.BannerService"
+		ref="BannerService" />
+	<dubbo:service interface="com.wang.service.CategoryService" 
+		ref="CategoryService" />
+	<dubbo:service interface="com.wang.service.PictureService" 
+		ref="PictureService" />
+	<dubbo:service interface="com.wang.service.ItemsService" 
+		ref="ItemsService" />
+	<dubbo:monitor protocol="registry"></dubbo:monitor>
+	<!-- 和本地bean一样实现服务 -->
+	<bean id="AdminService"
+		class="com.wang.service.impl.AdminServiceImpl" />
+	<bean id="BannerService"
+		class="com.wang.service.impl.BannerServiceImpl" />
+	<bean id="CategoryService"
+		class="com.wang.service.impl.CategoryServiceImpl" />
+	<bean id="PictureService"
+		class="com.wang.service.impl.PictureServiceImpl" />
+	<bean id="ItemsService"
+		class="com.wang.service.impl.ItemsServiceImpl" />
+</beans>
