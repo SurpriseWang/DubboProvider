@@ -12,5 +12,5 @@ public class Provider {
 		applicationContext.start();
 		System.out.println("~~ProviderStartUp");
 		System.in.read();
-	}
+	} 
 }

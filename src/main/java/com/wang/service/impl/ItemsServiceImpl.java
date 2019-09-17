@@ -20,7 +20,7 @@ public class ItemsServiceImpl implements ItemsService {
 	@Autowired
 	private PictureMapper pictureMapper;
 	@Override
-	public ItemVo queryItems(Integer id) {
+	public ItemVo queryItemsByPictureId(Integer id) {
 		Picture picture = pictureMapper.selectByPrimaryKey(id);
 		Integer itemId = picture.getItemId();
 		PictureExample pictureExample = new PictureExample();
@@ -28,6 +28,15 @@ public class ItemsServiceImpl implements ItemsService {
 		List<Picture> pictures = pictureMapper.selectByExample(pictureExample);
 		Item item = itemMapper.selectByPrimaryKey(itemId);
 		ItemVo itemVo = new ItemVo(pictures, item);
+		return itemVo;
+	}
+	@Override
+	public ItemVo queryItemsByItemId(Integer id) {
+		Item item = itemMapper.selectByPrimaryKey(id);
+		PictureExample pictureExample = new PictureExample();
+		pictureExample.createCriteria().andItemIdEqualTo(id);
+		List<Picture> pictures = pictureMapper.selectByExample(pictureExample);
+		ItemVo itemVo =new ItemVo(pictures, item);
 		return itemVo;
 	}
 }

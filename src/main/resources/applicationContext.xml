@@ -59,6 +59,10 @@ http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
 		ref="PictureService" />
 	<dubbo:service interface="com.wang.service.ItemsService" 
 		ref="ItemsService" />
+	<dubbo:service interface="com.wang.service.UserService" 
+		ref="UserService" />
+	<dubbo:service interface="com.wang.service.ShopingCartService" 
+		ref="ShopingCartService" />
 	<dubbo:monitor protocol="registry"></dubbo:monitor>
 	<!-- 和本地bean一样实现服务 -->
 	<bean id="AdminService"
@@ -71,4 +75,8 @@ http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
 		class="com.wang.service.impl.PictureServiceImpl" />
 	<bean id="ItemsService"
 		class="com.wang.service.impl.ItemsServiceImpl" />
+	<bean id="UserService"
+		class="com.wang.service.impl.UserServiceImpl" />
+	<bean id="ShopingCartService"
+		class="com.wang.service.impl.ShopingCartServiceImpl" />
 </beans>
